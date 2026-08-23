@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>성남서초등학교 · 2026 교무포털</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7EF;
+    --paper-card:#FFFFFF;
+    --ink:#223843;
+    --ink-soft:#5b6b73;
+    --line:#E4DCC9;
+    --coral:#E86C4C;      /* 학사·교육 */
+    --sky:#4F8FB0;        /* 시설·공간 */
+    --sage:#5E8F6E;       /* 행정·서류 */
+    --mustard:#D99A22;    /* 소통·기타 */
+    --coral-tint:#FBEAE3;
+    --sky-tint:#E7F1F6;
+    --sage-tint:#E9F1EA;
+    --mustard-tint:#FBF0DC;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    font-family:'Noto Sans KR', sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    background-image:
+      linear-gradient(var(--paper) 27px, #F1EBDB 28px);
+    background-size: 100% 28px;
+  }
+
+  /* ---------- Layout shell ---------- */
+  .app{
+    display:flex;
+    min-height:100vh;
+  }
+
+  /* ---------- Header ---------- */
+  header.top{
+    position:fixed; top:0; left:0; right:0; height:64px;
+    background:var(--paper-card);
+    border-bottom:3px solid var(--ink);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:0 20px;
+    z-index:50;
+  }
+  header.top .brand{ display:flex; align-items:center; gap:12px; }
+  header.top .brand .badge{
+    font-family:'Gaegu', cursive;
+    font-size:26px; font-weight:700;
+    background:var(--coral); color:#fff;
+    width:42px; height:42px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    transform:rotate(-4deg);
+    box-shadow:2px 3px 0 var(--ink);
+  }
+  header.top h1{
+    font-family:'Gaegu', cursive;
+    font-size:22px; margin:0; line-height:1.1;
+  }
+  header.top h1 span{
+    display:block; font-family:'Noto Sans KR'; font-size:11px;
+    font-weight:500; color:var(--ink-soft); letter-spacing:.5px;
+  }
+  header.top .today{
+    font-size:13px; color:var(--ink-soft); font-weight:500;
+    display:flex; align-items:center; gap:8px;
+  }
+  #menuToggle{
+    display:none; background:none; border:2px solid var(--ink); border-radius:8px;
+    width:38px; height:38px; font-size:18px; cursor:pointer;
+  }
+
+  /* ---------- Sidebar (binder tabs) ---------- */
+  nav.side{
+    width:270px; flex-shrink:0;
+    margin-top:64px;
+    height:calc(100vh - 64px);
+    overflow-y:auto;
+    padding:18px 0 40px 18px;
+    position:fixed; top:0; left:0;
+  }
+  .group{ margin-bottom:22px; }
+  .group-label{
+    font-size:11px; font-weight:700; letter-spacing:1.5px;
+    color:#fff; padding:4px 10px; border-radius:4px 4px 0 0;
+    display:inline-block; margin-left:4px;
+  }
+  .group[data-g="edu"] .group-label{ background:var(--coral); }
+  .group[data-g="fac"] .group-label{ background:var(--sky); }
+  .group[data-g="adm"] .group-label{ background:var(--sage); }
+  .group[data-g="com"] .group-label{ background:var(--mustard); }
+
+  .tabset{
+    background:var(--paper-card);
+    border:2px solid var(--ink);
+    border-radius:0 10px 10px 10px;
+    overflow:hidden;
+  }
+  .tab{
+    display:flex; align-items:center; gap:10px;
+    width:100%; text-align:left; border:none; background:none;
+    cursor:pointer; padding:11px 14px;
+    font-family:'Noto Sans KR'; font-size:14px; font-weight:500; color:var(--ink);
+    border-bottom:1px solid var(--line);
+    position:relative;
+  }
+  .tab:last-child{ border-bottom:none; }
+  .tab .ic{ font-size:16px; flex-shrink:0; }
+  .tab .tx{ flex:1; }
+  .group[data-g="edu"] .tab.active{ background:var(--coral-tint); }
+  .group[data-g="fac"] .tab.active{ background:var(--sky-tint); }
+  .group[data-g="adm"] .tab.active{ background:var(--sage-tint); }
+  .group[data-g="com"] .tab.active{ background:var(--mustard-tint); }
+  .tab.active::before{
+    content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+  }
+  .group[data-g="edu"] .tab.active::before{ background:var(--coral); }
+  .group[data-g="fac"] .tab.active::before{ background:var(--sky); }
+  .group[data-g="adm"] .tab.active::before{ background:var(--sage); }
+  .group[data-g="com"] .tab.active::before{ background:var(--mustard); }
+  .tab:hover{ background:#F6F2E7; }
+
+  /* ---------- Main ---------- */
+  main{
+    margin-left:270px; margin-top:64px;
+    padding:24px 28px 40px;
+    width:calc(100% - 270px);
+    min-height:calc(100vh - 64px);
+  }
+  .panel{
+    background:var(--paper-card);
+    border:2px solid var(--ink);
+    border-radius:12px;
+    box-shadow:4px 4px 0 var(--line);
+    overflow:hidden;
+    min-height:calc(100vh - 64px - 48px);
+    display:flex; flex-direction:column;
+  }
+  .panel-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:2px solid var(--ink);
+    flex-wrap:wrap; gap:10px;
+  }
+  .panel-head h2{
+    font-family:'Gaegu', cursive; font-size:24px; margin:0;
+    display:flex; align-items:center; gap:10px;
+  }
+  .panel-head .desc{ font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+  .actions{ display:flex; gap:8px; }
+  .btn{
+    font-family:'Noto Sans KR'; font-weight:700; font-size:12.5px;
+    padding:9px 14px; border-radius:8px; border:2px solid var(--ink);
+    background:#fff; color:var(--ink); cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center; gap:6px;
+    transition:transform .1s;
+  }
+  .btn:hover{ transform:translateY(-1px); }
+  .btn.primary{ background:var(--ink); color:#fff; }
+
+  .frame-wrap{ flex:1; position:relative; background:#fdfdfb; }
+  iframe{ position:absolute; inset:0; width:100%; height:100%; border:none; }
+
+  .body-mount{ flex:1; display:flex; flex-direction:column; min-height:0; }
+
+  .tbl-loading{
+    flex:1; display:flex; align-items:center; justify-content:center;
+    font-size:14px; color:var(--ink-soft); font-weight:700;
+  }
+  .tbl-scroll{ flex:1; overflow:auto; padding:4px; }
+  table.live-tbl{
+    border-collapse:collapse; width:100%; font-size:13px; font-family:'Noto Sans KR';
+  }
+  table.live-tbl th, table.live-tbl td{
+    border:1px solid var(--line); padding:7px 10px; text-align:left; white-space:nowrap;
+  }
+  table.live-tbl thead th{
+    position:sticky; top:0; background:var(--ink); color:#fff; font-weight:700; z-index:1;
+  }
+  table.live-tbl tbody tr:nth-child(even){ background:#F8F5EB; }
+  table.live-tbl tbody tr:hover{ background:var(--coral-tint); }
+
+  .mchips{
+    display:flex; flex-wrap:wrap; gap:6px; padding:12px 16px;
+    border-bottom:2px solid var(--ink); background:#FCFAF3; position:sticky; top:0; z-index:2;
+  }
+  .mchip{
+    font-family:'Noto Sans KR'; font-weight:700; font-size:12.5px;
+    padding:6px 12px; border-radius:16px; border:2px solid var(--ink);
+    background:#fff; cursor:pointer;
+  }
+  .mchip:hover{ background:var(--coral); color:#fff; }
+  .multi-scroll{ flex:1; overflow-y:auto; padding:4px 16px 24px; }
+  .month-section{ padding-top:18px; scroll-margin-top:10px; }
+  .month-h{
+    font-family:'Gaegu', cursive; font-size:22px; margin:6px 0 8px;
+    display:inline-block; padding:2px 12px; border-radius:6px;
+    background:var(--coral); color:#fff;
+  }
+  .tbl-fail{
+    font-size:13px; color:var(--ink-soft); padding:14px; border:1px dashed var(--line); border-radius:8px;
+  }
+  .tbl-fail a{ color:var(--coral); font-weight:700; }
+
+  .empty-state{
+    flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:14px; padding:40px; text-align:center; color:var(--ink-soft);
+  }
+  .empty-state .em{ font-size:44px; }
+  .empty-state h3{ font-family:'Gaegu',cursive; font-size:22px; color:var(--ink); margin:0; }
+  .empty-state p{ max-width:420px; font-size:13.5px; line-height:1.6; margin:0; }
+
+  .welcome{
+    padding:40px; display:flex; flex-direction:column; gap:18px; flex:1; justify-content:center;
+  }
+  .welcome h2{ font-family:'Gaegu', cursive; font-size:32px; margin:0; }
+  .welcome p{ color:var(--ink-soft); font-size:14px; max-width:560px; line-height:1.7; margin:0; }
+  .quicklinks{ display:flex; flex-wrap:wrap; gap:10px; margin-top:6px; }
+  .qchip{
+    border:2px solid var(--ink); border-radius:20px; padding:8px 16px;
+    font-size:13px; font-weight:700; cursor:pointer; background:#fff;
+    display:flex; align-items:center; gap:6px;
+  }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width:900px){
+    #menuToggle{ display:flex; align-items:center; justify-content:center; }
+    nav.side{
+      left:-290px; transition:left .2s ease; z-index:60;
+      background:var(--paper); box-shadow:6px 0 20px rgba(0,0,0,.15);
+    }
+    nav.side.open{ left:0; }
+    main{ margin-left:0; width:100%; padding:16px; }
+    header.top h1{ font-size:17px; }
+    header.top .today{ display:none; }
+    .overlay{
+      display:none; position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:55;
+    }
+    .overlay.show{ display:block; }
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <button id="menuToggle" aria-label="메뉴 열기">☰</button>
+    <div class="badge">서</div>
+    <h1>성남서초등학교<span>2026 교무포털 · SEONGNAMSEO ELEMENTARY</span></h1>
+  </div>
+  <div class="today" id="todayStr"></div>
+</header>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="app">
+  <nav class="side" id="sideNav">
+    <!-- groups injected by JS -->
+  </nav>
+
+  <main>
+    <div class="panel" id="panel">
+      <!-- content injected by JS -->
+    </div>
+  </main>
+</div>
+
+<script>
+/* =========================================================
+   설정 데이터 — 항목을 추가/수정하려면 이 배열만 고치면 됩니다.
+   embed: iframe 안에 띄울 실시간 보기 링크
+   edit : 새 탭에서 "편집" 화면으로 여는 링크 (없으면 embed와 동일)
+   external: true면 iframe 없이 바로가기 카드만 표시
+========================================================= */
+const DATA = [
+  {
+    key:"edu", label:"학사 · 교육", color:"coral",
+    items:[
+      { id:"home", name:"학교홈피", icon:"🏫", type:"external",
+        desc:"학교 공식 홈페이지 공지사항",
+        edit:"https://seongnamseo-e.goesn.kr/seongnamseo-e/na/ntt/selectNttList.do?mi=13376&bbsId=11828" },
+      { id:"calendar", name:"학사일정", icon:"📅", type:"doc",
+        desc:"2026학년도 학사일정표",
+        docId:"1zRWktLjv2nKCoP6NQwSYzvHzcotURsDD3o0UF6spUyc" },
+      { id:"monthly", name:"월중계획", icon:"🗓️", type:"multiSheet",
+        desc:"3월~2월 월중 계획표 전체",
+        sheetId:"17gdOjCOVMap9L73j7My2VEDkwH-hnQVzP5Pv-iGnMdY",
+        tabs:["3월","4월","5월","6월","7월","8월","9월","10월","11월","12월","1월","2월"] },
+      { id:"eduTalk", name:"교육 이야기", icon:"💬", type:"padlet",
+        desc:"교육활동 나눔 기록 (Padlet)",
+        url:"https://padlet.com/pad176_2/2026-mv0edfbfkpv8ukg7" },
+      { id:"bell", name:"시정표", icon:"🔔", type:"doc",
+        desc:"등하교 및 교시별 시정표",
+        docId:"1T4d9cJV7F67Y_8dNuszKEFL-pBBOpRzJNzV7E14cQNE" },
+    ]
+  },
+  {
+    key:"fac", label:"시설 · 공간", color:"sky",
+    items:[
+      { id:"roomTime", name:"특별실 시간표", icon:"🧭", type:"sheet",
+        desc:"특별실별 주간 시간표",
+        sheetId:"1xtbdhS_btLCxwAJ6LykW7nV-iQbr0Vk08_VfdKabDHc", gid:"1618476015" },
+      { id:"roomBook", name:"특별실 사용예약", icon:"🗝️", type:"sheet",
+        desc:"특별실 사용 예약 현황",
+        sheetId:"1JC4P_EYUFGm3g3sKFMSCOw27zEWUy1HY0QmCq0RpnXg", gid:"0" },
+      { id:"classroomMap", name:"교실 배치도", icon:"🗺️", type:"doc",
+        desc:"학년/학급별 교실 배치",
+        docId:"18U44xW7NsK3LsQCpnI-9gRQsn2pk_9OjHRTSocN0MxI" },
+      { id:"pcRepair", name:"컴퓨터수리", icon:"🖥️", type:"sheet",
+        desc:"컴퓨터/기기 수리 요청 현황",
+        sheetId:"1e7436gJB5i-_YZtPGHNlliSXKCdHAFY1-aLEn7jKh1Q", gid:"0" },
+    ]
+  },
+  {
+    key:"adm", label:"행정 · 서류", color:"sage",
+    items:[
+      { id:"students", name:"학생 수 현황", icon:"👧", type:"sheet",
+        desc:"학년/학급별 학생 수 현황",
+        sheetId:"1IkqY3348oUxbITBHJvephlLIxCuiTN6NIqhQgR9ENns", gid:"602898286" },
+      { id:"duties", name:"업무분장표", icon:"🗂️", type:"doc",
+        desc:"교직원 업무분장 현황",
+        docId:"1Z4dgFTCs5t2Hw9QViKT6Y18b0GOH2kPNu7Sgs2nN7EU" },
+      { id:"research", name:"연구부", icon:"🔬", type:"drive",
+        desc:"연구부 운영 자료",
+        driveFolderId:"1lqM3ASq6lcdJ6zTKbsKXI5X1L5tnyH9x" },
+      { id:"delegation", name:"위임전결규정", icon:"📜", type:"sheet",
+        desc:"결재 위임전결 규정표",
+        sheetId:"1P9_tlGRKROWLeTRKZy9Jp97c9pFWjcwjMS4F0JrsDvo", gid:"0" },
+      { id:"purchase", name:"물품구입", icon:"🛒", type:"sheet",
+        desc:"물품구입 신청 안내",
+        sheetId:"1Q8tqmNFH2i_qWMm0IA_37Q3paUFy3QEDxi2rIjKk7Ls", gid:"0" },
+    ]
+  },
+  {
+    key:"com", label:"소통 · 기타", color:"mustard",
+    items:[
+      { id:"suggest", name:"수리&제안", icon:"✉️", type:"form",
+        desc:"수리 요청 및 제안 접수 폼",
+        url:"https://docs.google.com/forms/d/e/1FAIpQLScMaAKArd9jMY7XJA8pqzehUacxGYqIOs55X4s08xvPL4aaHA/viewform?embedded=true",
+        editUrl:"https://docs.google.com/forms/d/e/1FAIpQLScMaAKArd9jMY7XJA8pqzehUacxGYqIOs55X4s08xvPL4aaHA/viewform" },
+      { id:"ext", name:"내선번호", icon:"☎️", type:"sheet",
+        desc:"부서별 내선번호 목록",
+        sheetId:"195-0G2INcQlPu88Z5MpNvgGqS5FSwZPFZXj-V6KETB8", gid:"0" },
+      { id:"parentBook", name:"학부모상담 예약현황", icon:"👨‍👩‍👧", type:"sheet",
+        desc:"학부모 상담 예약 현황표",
+        sheetId:"1i1bxjI30qn_gJcORXUhourJeN5gEVGWqWQwVh3rAnBc", gid:"0" },
+    ]
+  }
+];
+
+const sideNav = document.getElementById('sideNav');
+const panel = document.getElementById('panel');
+
+function buildNav(){
+  sideNav.innerHTML = DATA.map(g => `
+    <div class="group" data-g="${g.key}">
+      <span class="group-label">${g.label}</span>
+      <div class="tabset">
+        ${g.items.map(it => `
+          <button class="tab" data-id="${it.id}">
+            <span class="ic">${it.icon}</span>
+            <span class="tx">${it.name}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  sideNav.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      selectItem(btn.dataset.id);
+      if(window.innerWidth<=900) closeMenu();
+    });
+  });
+}
+
+function findItem(id){
+  for(const g of DATA){
+    const found = g.items.find(i=>i.id===id);
+    if(found) return found;
+  }
+  return null;
+}
+
+function openUrl(it){
+  if(it.type==="sheet") return `https://docs.google.com/spreadsheets/d/${it.sheetId}/edit#gid=${it.gid}`;
+  if(it.type==="multiSheet") return `https://docs.google.com/spreadsheets/d/${it.sheetId}/edit`;
+  if(it.type==="doc") return `https://docs.google.com/document/d/${it.docId}/edit`;
+  if(it.type==="drive") return `https://drive.google.com/drive/folders/${it.driveFolderId}`;
+  if(it.type==="form") return it.editUrl || it.url;
+  if(it.type==="padlet") return it.url;
+  if(it.type==="external") return it.edit;
+  return "#";
+}
+
+function gvizToTableHtml(resp){
+  const cols = resp.table.cols.map(c => (c.label && c.label.trim()) ? c.label : "");
+  const rows = resp.table.rows.map(r => r.c.map(cell => cell ? (cell.f ?? cell.v ?? "") : ""));
+  const hasHeader = cols.some(c => c !== "");
+  let html = `<div class="tbl-scroll"><table class="live-tbl"><thead><tr>`;
+  if(hasHeader){
+    html += cols.map(c => `<th>${c}</th>`).join('');
+  } else if(rows.length){
+    html += rows[0].map(c => `<th>${c}</th>`).join('');
+    rows.shift();
+  }
+  html += `</tr></thead><tbody>`;
+  rows.forEach(r=>{
+    html += `<tr>${r.map(c=>`<td>${c===""?"&nbsp;":c}</td>`).join('')}</tr>`;
+  });
+  html += `</tbody></table></div>`;
+  return html;
+}
+
+function fetchGviz(sheetId, sheetName, onDone, onFail){
+  const cbName = "gvizCB_" + Math.random().toString(36).slice(2);
+  const cleanup = () => { delete window[cbName]; script.remove(); };
+  window[cbName] = function(resp){
+    try{ onDone(resp); } catch(e){ onFail(); }
+    cleanup();
+  };
+  const script = document.createElement('script');
+  script.src = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?sheet=${encodeURIComponent(sheetName)}&headers=1&tqx=out:json;responseHandler:${cbName}`;
+  script.onerror = () => { onFail(); cleanup(); };
+  document.body.appendChild(script);
+  setTimeout(()=>{ if(window[cbName]) onFail(); }, 8000);
+}
+
+/* ---- live Google Sheet table renderer (single tab, no iframe, no login wall) ---- */
+function renderSheetTable(it, mountEl){
+  mountEl.innerHTML = `<div class="tbl-loading">📊 시트 불러오는 중…</div>`;
+  const cbName = "gvizCB_" + Math.random().toString(36).slice(2);
+  const cleanup = () => { delete window[cbName]; script.remove(); };
+
+  window[cbName] = function(resp){
+    try{ mountEl.innerHTML = gvizToTableHtml(resp); }
+    catch(e){ renderSheetFallback(it, mountEl); }
+    cleanup();
+  };
+
+  const script = document.createElement('script');
+  script.src = `https://docs.google.com/spreadsheets/d/${it.sheetId}/gviz/tq?gid=${it.gid}&headers=1&tqx=out:json;responseHandler:${cbName}`;
+  script.onerror = () => { renderSheetFallback(it, mountEl); cleanup(); };
+  document.body.appendChild(script);
+
+  setTimeout(()=>{
+    if(window[cbName]) renderSheetFallback(it, mountEl);
+  }, 7000);
+}
+
+/* ---- live renderer for a sheet with several tabs stacked in one scroll (e.g. 월중계획) ---- */
+function renderMultiSheet(it, mountEl){
+  const chips = it.tabs.map(t => `<button class="mchip" data-anchor="m-${t}">${t}</button>`).join('');
+  const sections = it.tabs.map(t => `
+    <section class="month-section" id="m-${t}">
+      <h3 class="month-h">${t}</h3>
+      <div class="tbl-loading" data-slot="${t}">📊 ${t} 불러오는 중…</div>
+    </section>
+  `).join('');
+
+  mountEl.innerHTML = `
+    <div class="mchips">${chips}</div>
+    <div class="multi-scroll">${sections}</div>
+  `;
+
+  mountEl.querySelectorAll('.mchip').forEach(chip=>{
+    chip.addEventListener('click', ()=>{
+      const target = mountEl.querySelector('#'+chip.dataset.anchor);
+      if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  it.tabs.forEach(tab=>{
+    const slot = mountEl.querySelector(`[data-slot="${CSS.escape(tab)}"]`);
+    fetchGviz(
+      it.sheetId, tab,
+      (resp)=>{ if(slot) slot.outerHTML = gvizToTableHtml(resp); },
+      ()=>{ if(slot) slot.outerHTML = `<div class="tbl-fail">⚠️ ${tab} 탭을 불러오지 못했어요. <a href="https://docs.google.com/spreadsheets/d/${it.sheetId}/edit" target="_blank" rel="noopener">새 탭에서 열기 ↗</a></div>`; }
+    );
+  });
+}
+
+function renderSheetFallback(it, mountEl){
+  mountEl.innerHTML = `
+    <div class="empty-state">
+      <div class="em">⚠️</div>
+      <h3>표를 불러오지 못했어요</h3>
+      <p>이 시트가 "링크가 있는 모든 사용자"로 공유되어 있는지 확인해 주세요. 그래도 안 되면 아래에서 원본을 직접 열어보세요.</p>
+      <a class="btn primary" href="${openUrl(it)}" target="_blank" rel="noopener">↗ 새 탭에서 열기</a>
+    </div>`;
+}
+
+function selectItem(id){
+  const it = findItem(id);
+  if(!it) return;
+
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+
+  const showEditBtn = it.type !== "external" && !it.empty;
+
+  panel.innerHTML = `
+    <div class="panel-head">
+      <div>
+        <h2>${it.icon} ${it.name}</h2>
+        <div class="desc">${it.desc}</div>
+      </div>
+      <div class="actions">
+        ${showEditBtn ? `<a class="btn" href="${openUrl(it)}" target="_blank" rel="noopener">↗ 새 탭에서 열기</a>` : ''}
+      </div>
+    </div>
+    <div id="bodyMount" class="body-mount"></div>
+  `;
+
+  const mount = document.getElementById('bodyMount');
+
+  if(it.empty){
+    mount.innerHTML = `
+      <div class="empty-state">
+        <div class="em">🗒️</div>
+        <h3>아직 연결된 링크가 없어요</h3>
+        <p>"${it.name}" 항목은 원본 사이트에도 자료 링크가 등록되어 있지 않았습니다. 담당 부서에 문의해 링크를 받으면 이 화면에 바로 연결할 수 있어요.</p>
+      </div>`;
+    return;
+  }
+
+  if(it.type === "external"){
+    mount.innerHTML = `
+      <div class="empty-state">
+        <div class="em">${it.icon}</div>
+        <h3>${it.name}은(는) 새 탭에서 열립니다</h3>
+        <p>학교 홈페이지는 외부 사이트 보안 정책상 포털 안에 바로 띄울 수 없어요. 아래 버튼으로 바로 이동해 주세요.</p>
+        <a class="btn primary" href="${it.edit}" target="_blank" rel="noopener">${it.icon} ${it.name} 바로가기 ↗</a>
+      </div>`;
+    return;
+  }
+
+  if(it.type === "sheet"){
+    renderSheetTable(it, mount);
+    return;
+  }
+
+  if(it.type === "multiSheet"){
+    renderMultiSheet(it, mount);
+    return;
+  }
+
+  // doc / drive / form / padlet -> iframe
+  let src = "";
+  if(it.type === "doc") src = `https://docs.google.com/document/d/${it.docId}/preview`;
+  else if(it.type === "drive") src = `https://drive.google.com/embeddedfolderview?id=${it.driveFolderId}#list`;
+  else if(it.type === "form" || it.type === "padlet") src = it.url;
+
+  mount.innerHTML = `<div class="frame-wrap"><iframe src="${src}" loading="lazy" title="${it.name}"></iframe></div>`;
+}
+
+function showWelcome(){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  panel.innerHTML = `
+    <div class="welcome">
+      <h2>안녕하세요, 성남서초 선생님 🏫💕</h2>
+      <p>왼쪽 탭에서 필요한 자료를 선택하세요. 모든 시트/문서는 원본과 실시간으로 연결되어 있어, 담당자가 원본을 수정하면 이 화면에도 바로 반영됩니다.</p>
+      <div class="quicklinks">
+        <div class="qchip" data-id="calendar">📅 학사일정</div>
+        <div class="qchip" data-id="monthly">🗓️ 월중계획</div>
+        <div class="qchip" data-id="roomBook">🗝️ 특별실 예약</div>
+        <div class="qchip" data-id="suggest">✉️ 수리&제안</div>
+      </div>
+    </div>
+  `;
+  panel.querySelectorAll('.qchip').forEach(c=>{
+    c.addEventListener('click', ()=>selectItem(c.dataset.id));
+  });
+}
+
+/* mobile menu */
+const sideEl = document.getElementById('sideNav');
+const overlay = document.getElementById('overlay');
+document.getElementById('menuToggle').addEventListener('click', ()=>{
+  sideEl.classList.toggle('open');
+  overlay.classList.toggle('show');
+});
+function closeMenu(){ sideEl.classList.remove('open'); overlay.classList.remove('show'); }
+overlay.addEventListener('click', closeMenu);
+
+/* today string */
+document.getElementById('todayStr').textContent = new Date().toLocaleDateString('ko-KR', {
+  year:'numeric', month:'long', day:'numeric', weekday:'long'
+});
+
+buildNav();
+showWelcome();
+</script>
+</body>
+</html>
