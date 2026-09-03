@@ -319,9 +319,10 @@ const DATA = [
       { id:"classroomMap", name:"교실 배치도", icon:"🗺️", type:"doc",
         desc:"학년/학급별 교실 배치",
         docId:"18U44xW7NsK3LsQCpnI-9gRQsn2pk_9OjHRTSocN0MxI" },
-      { id:"pcRepair", name:"컴퓨터수리", icon:"🖥️", type:"sheet",
-        desc:"컴퓨터/기기 수리 요청 현황",
-        sheetId:"1e7436gJB5i-_YZtPGHNlliSXKCdHAFY1-aLEn7jKh1Q", gid:"0" },
+      { id:"pcRepair", name:"컴퓨터수리", icon:"🖥️", type:"form",
+        desc:"컴퓨터/기기 수리 요청 접수 폼",
+        url:"https://docs.google.com/forms/d/e/1FAIpQLScMaAKArd9jMY7XJA8pqzehUacxGYqIOs55X4s08xvPL4aaHA/viewform?embedded=true",
+        editUrl:"https://docs.google.com/forms/d/e/1FAIpQLScMaAKArd9jMY7XJA8pqzehUacxGYqIOs55X4s08xvPL4aaHA/viewform" },
     ]
   },
   {
@@ -347,10 +348,9 @@ const DATA = [
   {
     key:"com", label:"소통 · 기타", color:"mustard",
     items:[
-      { id:"suggest", name:"수리&제안", icon:"✉️", type:"form",
-        desc:"수리 요청 및 제안 접수 폼",
-        url:"https://docs.google.com/forms/d/e/1FAIpQLScMaAKArd9jMY7XJA8pqzehUacxGYqIOs55X4s08xvPL4aaHA/viewform?embedded=true",
-        editUrl:"https://docs.google.com/forms/d/e/1FAIpQLScMaAKArd9jMY7XJA8pqzehUacxGYqIOs55X4s08xvPL4aaHA/viewform" },
+      { id:"suggest", name:"수리&제안", icon:"✉️", type:"sheet",
+        desc:"수리 요청 및 제안 접수 현황",
+        sheetId:"1e7436gJB5i-_YZtPGHNlliSXKCdHAFY1-aLEn7jKh1Q", gid:"0" },
       { id:"ext", name:"내선번호", icon:"☎️", type:"sheet",
         desc:"부서별 내선번호 목록",
         sheetId:"195-0G2INcQlPu88Z5MpNvgGqS5FSwZPFZXj-V6KETB8", gid:"0" },
